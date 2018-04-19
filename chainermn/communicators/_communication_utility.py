@@ -75,6 +75,28 @@ def init_comms(mpi_comm, intra_rank, intra_size, inter_rank, use_nccl=True):
         return intra_mpi_comm, inter_mpi_comm
 
 
+def init_intra_mpi_comm(mpi_comm, intra_rank, inter_rank):
+    return mpi_comm.Split(inter_rank, intra_rank)
+
+
+def init_inter_mpi_comm(mpi_comm, intra_rank, inter_rank):
+    return mpi_comm.Split(intra_rank, inter_rank)
+
+
+def init_intra_nccl_comm(intra_mpi_comm, intra_rank, intra_size):
+    from chainermn import nccl
+    intra_nccl_comm_id = intra_mpi_comm.bcast(nccl.get_unique_id())
+    return nccl.NcclCommunicator(
+            intra_size, intra_nccl_comm_id, intra_rank)
+
+
+def init_nccl_comm(mpi_comm):
+    from chainermn import nccl
+    nccl_comm_id = mpi_comm.bcast(nccl.get_unique_id())
+    return nccl.NcclCommunicator(
+                mpi_comm.size, nccl_comm_id, mpi_comm.rank)
+
+
 def inter_allreduce_gpu(
         inter_mpi_comm, size, gpu_buffer_a, gpu_buffer_b,
         n_bytes_buffer, n_elems_per_node, n_bytes_per_node, cuda_stream):

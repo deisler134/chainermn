@@ -12,6 +12,9 @@ class FlatCommunicator(mpi_communicator_base.MpiCommunicatorBase):
         self.gpu_buffer_a = _memory_utility.DeviceMemory()
         self.gpu_buffer_b = _memory_utility.DeviceMemory()
 
+    def _init_comms(self):
+        pass
+
     def allreduce_grad(self, model):
         self._init_comms()
 
