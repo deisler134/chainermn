@@ -9,7 +9,6 @@ from chainermn.communicators import _communication_utility
 from chainermn.communicators._communication_utility import chunked_bcast_obj
 from chainermn.communicators import _memory_utility
 from chainermn.communicators import communicator_base
-from chainermn import nccl
 
 
 def _cnt_to_dsp(cnt):
@@ -48,7 +47,7 @@ class MpiCommunicatorBase(communicator_base.CommunicatorBase):
 
     '''
 
-    def __init__(self, mpi_comm, use_nccl=False):
+    def __init__(self, mpi_comm):
         self.mpi_comm = mpi_comm
         self._init_ranks()
 
@@ -354,4 +353,3 @@ class MpiCommunicatorBase(communicator_base.CommunicatorBase):
         self.intra_size = my_ranks[2]
         self.inter_rank = my_ranks[3]
         self.inter_size = my_ranks[4]
-

@@ -42,9 +42,8 @@ class PureNcclCommunicator(mpi_communicator_base.MpiCommunicatorBase):
     def _init_comms(self):
         if self.nccl_comm is not None:
             return
-
-        self.nccl_comm = _communication_utility.init_nccl_comm(self.mpi_comm)
-
+        self.nccl_comm = _communication_utility.init_nccl_comm(
+            self.mpi_comm, self.mpi_comm.rank, self.mpi_comm.size)
 
     def allreduce_grad(self, model):
         stream = chainer.cuda.Stream.null
