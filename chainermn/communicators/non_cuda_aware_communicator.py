@@ -40,7 +40,7 @@ class NonCudaAwareCommunicator(mpi_communicator_base.MpiCommunicatorBase):
         self.inter_mpi_comm = _communication_utility.init_inter_mpi_comm(
             self.mpi_comm, self.intra_rank, self.inter_rank)
         self.intra_nccl_comm = _communication_utility.init_nccl_comm(
-            intra_mpi_comm, self.intra_rank, self.intra_size)
+            intra_mpi_comm)
 
     def bcast_data(self, model):
         for _, param in sorted(model.namedparams()):

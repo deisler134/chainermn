@@ -64,10 +64,10 @@ def init_inter_mpi_comm(mpi_comm, intra_rank, inter_rank):
     return mpi_comm.Split(intra_rank, inter_rank)
 
 
-def init_nccl_comm(mpi_comm, rank, size):
+def init_nccl_comm(mpi_comm):
     from chainermn import nccl
     nccl_comm_id = mpi_comm.bcast(nccl.get_unique_id())
-    return nccl.NcclCommunicator(size, nccl_comm_id, rank)
+    return nccl.NcclCommunicator(mpi_comm.size, nccl_comm_id, mpi_comm.rank)
 
 
 def inter_allreduce_gpu(

@@ -36,7 +36,7 @@ class SingleNodeCommunicator(mpi_communicator_base.MpiCommunicatorBase):
         intra_mpi_comm = _communication_utility.init_intra_mpi_comm(
             self.mpi_comm, self.intra_rank, self.inter_rank)
         self.intra_nccl_comm = _communication_utility.init_nccl_comm(
-            intra_mpi_comm, self.intra_rank, self.intra_size)
+            intra_mpi_comm)
 
     def bcast_data(self, model):
         self._init_comms()
