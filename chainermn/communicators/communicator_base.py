@@ -19,11 +19,11 @@ class CommunicatorBase(six.with_metaclass(ABCMeta)):
         [send, recv, bcast, gather, allreduce] * [ '_obj', '']
 
 
-    (with single exception ``alltoall``, ``allreduce_grad`` and
-    ``bcast_data`` so far). Also methods are supposed to be written in
-    this order. Methods may also be allowed to be left uninmplemented.
-    Also ``split`` is not officially supported API, but for MPI-based
-    communicators.
+    (with single exception ``alltoall``, ``allreduce_grad``, ``split``
+    and ``bcast_data`` so far). Also methods are supposed to be
+    written in this order. All those methods must be implemented in
+    its implementation class, or otherwise it cannot be instantiated
+    in runtime.
 
     .. note:: As most implementation of ``_obj``-sufficed methods
       involves Python object pickling and unpickling, there is an
@@ -50,6 +50,29 @@ class CommunicatorBase(six.with_metaclass(ABCMeta)):
     @property
     def size(self):
         '''Number of nodes of the cluster'''
+        raise NotImplementedError()
+
+    @abstractmethod
+    def split(self, color, key):
+        """A function anologous to ``MPI_Comm_Split`` .
+
+        This method splits the inter MPI commnicator and return a wrapped
+        ChainerMN communicator.
+
+        Args:
+            color (int):
+                Index of new group. The process with the same color will be
+                assigned to the same group.
+            key (int):
+                Control of rank assignment. The process will be assigned
+                a rank in the new group ordered by the value of key.
+                If you do not care of the rank, you can just simply specify
+                the original rank.
+
+        Returns:
+            CommunicatorBase
+
+        """
         raise NotImplementedError()
 
     @abstractmethod
