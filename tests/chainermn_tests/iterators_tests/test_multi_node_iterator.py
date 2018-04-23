@@ -53,6 +53,7 @@ class TestMultiNodeIterator(unittest.TestCase):
         if self.communicator.size < 2:
             pytest.skip("This test is for multinode only")
 
+        self.communicator.mpi_comm.barrier()
         self.N = 100
         self.dataset = np.arange(self.N).astype(np.float32)
 
@@ -66,7 +67,9 @@ class TestMultiNodeIterator(unittest.TestCase):
 
         for e in range(3):
             for i in range(100):
+                print("i:", i, " rank:", self.communicator.rank, "start")
                 batch = iterator.next()
+                print("i:", i, " rank:", self.communicator.rank, "end")
                 if self.communicator.rank == 0:
                     for rank_from in range(1, self.communicator.size):
                         _batch = self.communicator.mpi_comm.recv(
@@ -85,7 +88,9 @@ class TestMultiNodeIterator(unittest.TestCase):
 
         for e in range(3):
             for i in range(100):
+                print("i:", i, " rank:", self.communicator.rank, "start")
                 batch = iterator.next()
+                print("i:", i, " rank:", self.communicator.rank, "end")
                 if self.communicator.rank == 0:
                     for rank_from in range(1, self.communicator.size):
                         _batch = self.communicator.mpi_comm.recv(
