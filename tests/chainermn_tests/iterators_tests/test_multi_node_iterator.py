@@ -67,9 +67,11 @@ class TestMultiNodeIterator(unittest.TestCase):
 
         for e in range(3):
             for i in range(100):
-                print("i:", i, " rank:", self.communicator.rank, "start")
+                print("i:", i, " rank:", self.communicator.rank, "start", flush=True)
                 batch = iterator.next()
-                print("i:", i, " rank:", self.communicator.rank, "end")
+                print("i:", i, " rank:", self.communicator.rank, "end", flush=True)
+                print("i:", i, " rank:", self.communicator.rank, "assert start",
+                      flush=True)
                 if self.communicator.rank == 0:
                     for rank_from in range(1, self.communicator.size):
                         _batch = self.communicator.mpi_comm.recv(
@@ -77,6 +79,8 @@ class TestMultiNodeIterator(unittest.TestCase):
                         self.assertEqual(batch, _batch)
                 else:
                     self.communicator.mpi_comm.ssend(batch, dest=0)
+                print("i:", i, " rank:", self.communicator.rank, "assert start",
+                      flush=True)
 
     def test_mn_iterator_frag(self):
         # Batasize is not a multiple of batchsize.
